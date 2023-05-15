@@ -10,8 +10,8 @@ print(f'lista de productos: {lista_productos} \n')
 
 poblacion = []
 nueva_poblacion = []
-numero_particulas = 10
-mejor_particula = []
+numero_moleculas = 10
+mejor_molecula = []
 buffer = 0
 ratio_perdidaKE = 0.4
 # mutacion = 0.5
@@ -20,8 +20,8 @@ calorias_min = 800
 peso_max = 1.5
 
 
-def crear_poblacion_inicial(numero_particulas):
-    for i in range(numero_particulas):
+def crear_poblacion_inicial(numero_moleculas):
+    for i in range(numero_moleculas):
         mochila = [0] * len(lista_productos)
         puntuacion = [0] * 4
         for j in range(len(mochila)):
@@ -53,54 +53,54 @@ def energia_potencial_total(poblacion):
     return round(ept*0.15, 2)
 
 
-def mostrar_mejor_particula():
-    mejor_particula = poblacion[0]
+def mostrar_mejor_molecula():
+    mejor_molecula = poblacion[0]
     for i in range(len(poblacion)):
-        particula = poblacion[i]
-        # print(len(individuo), len(mejor_particula))
-        if(particula[len(particula)-2] >= mejor_particula[len(mejor_particula)-2]):
-            # print(f'mochila anterior: {mejor_particula}')
-            if (particula[len(particula)-4] <= peso_max) and (particula[len(particula)-3] >= calorias_min):
+        molecula = poblacion[i]
+        # print(len(individuo), len(mejor_molecula))
+        if(molecula[len(molecula)-2] >= mejor_molecula[len(mejor_molecula)-2]):
+            # print(f'mochila anterior: {mejor_molecula}')
+            if (molecula[len(molecula)-4] <= peso_max) and (molecula[len(molecula)-3] >= calorias_min):
                 # print('nueva mejor mochila')
-                mejor_particula = particula
-    print(f'mejor particula: {mejor_particula} \n')
+                mejor_molecula = molecula
+    print(f'mejor molecula: {mejor_molecula} \n')
 
 
 def col_ineficaz_contra_pared(w, buffer):
-    particula = poblacion[w]
-    particula_prima = mutar_particula(particula.copy())
-    print('particula: ', particula)
-    print('particula_prima: ', particula_prima)
-    if((particula[len(particula)-2] + particula[len(particula)-1]) >= particula_prima[len(particula_prima)-2]):
+    molecula = poblacion[w]
+    molecula_prima = mutar_molecula(molecula.copy())
+    print('molécula_original: ', molecula)
+    print('molécula_prima: ', molecula_prima)
+    if((molecula[len(molecula)-2] + molecula[len(molecula)-1]) >= molecula_prima[len(molecula_prima)-2]):
         q = random.uniform(ratio_perdidaKE, 1)
         # energia cinetica
-        particula_prima[len(particula_prima)-1] = round((particula[len(particula)-2] +
-                                                         particula[len(particula)-1] - particula_prima[len(particula_prima)-2]) * q, 2)
-        buffer = round(buffer + (particula[len(particula)-2] + particula[len(
-            particula)-1] - particula_prima[len(particula_prima)-2]) * (1-q), 2)
+        molecula_prima[len(molecula_prima)-1] = round((molecula[len(molecula)-2] +
+                                                         molecula[len(molecula)-1] - molecula_prima[len(molecula_prima)-2]) * q, 2)
+        buffer = round(buffer + (molecula[len(molecula)-2] + molecula[len(
+            molecula)-1] - molecula_prima[len(molecula_prima)-2]) * (1-q), 2)
         print('buffer actualizado: ', buffer)
-        # print(f'PEw: {particula[len(particula)-2]}, KEw: {particula[len(particula)-1]}')
-        # print(f'PEw_prima: {particula_prima[len(particula_prima)-2]}, KEw_prima: {particula_prima[len(particula_prima)-1]}')
-        # print('particula anterior: ', poblacion[w])
-        poblacion[w] = particula_prima
-        print('particula w ahora es w_prima: ', poblacion[w] , '\n')
+        # print(f'PEw: {molecula[len(molecula)-2]}, KEw: {molecula[len(molecula)-1]}')
+        # print(f'PEw_prima: {molecula_prima[len(molecula_prima)-2]}, KEw_prima: {molecula_prima[len(molecula_prima)-1]}')
+        # print('molecula anterior: ', poblacion[w])
+        poblacion[w] = molecula_prima
+        print('molécula w ahora es w_prima: ', poblacion[w] , '\n')
     else:
-        print('no hay cambios en la estrucutra interna de la partícula\n')
+        print('no hay cambios en la estrucutra interna de la molécula\n')
 
 
-def mutar_particula(particula):
+def mutar_molecula(molecula):
     producto_mutado = random.randint(0, len(lista_productos))
 
-    for i in range(len(particula)):
+    for i in range(len(molecula)):
         if(producto_mutado == i):
-            if(particula[i] == 0):
-                particula[i] = 1
+            if(molecula[i] == 0):
+                molecula[i] = 1
             else:
-                particula[i] = 0
+                molecula[i] = 0
 
     puntuacion = [0] * 4
-    for i in range(len(particula)-4):
-        if(particula[i] == 1):
+    for i in range(len(molecula)-4):
+        if(molecula[i] == 1):
             # print('true')
             # peso
             puntuacion[0] += float(lista_productos[i][1])
@@ -112,37 +112,37 @@ def mutar_particula(particula):
     # energia cinetica
     puntuacion[3] = 0
     # añadir puntuacion
-    particula[len(particula)-4] = puntuacion[0]
-    particula[len(particula)-3] = puntuacion[1]
-    particula[len(particula)-2] = puntuacion[2]
-    particula[len(particula)-1] = puntuacion[3]
+    molecula[len(molecula)-4] = puntuacion[0]
+    molecula[len(molecula)-3] = puntuacion[1]
+    molecula[len(molecula)-2] = puntuacion[2]
+    molecula[len(molecula)-1] = puntuacion[3]
 
-    return particula
+    return molecula
 
 
 def descomposicion(w, buffer):
-    particula = poblacion[w]
-    print('particula_original: ', particula)
-    particula_prima1, particula_prima2 = descomponer_particula(
-        particula.copy())
-    print('particula_prima1: ', particula_prima1)
-    print('particula_prima2: ', particula_prima2)
+    molecula = poblacion[w]
+    print('molécula_original: ', molecula)
+    molecula_prima1, molecula_prima2 = descomponer_molecula(
+        molecula.copy())
+    print('molécula_prima1: ', molecula_prima1)
+    print('molécula_prima2: ', molecula_prima2)
 
-    temp = particula[len(particula)-2] + particula[len(particula)-1] - particula_prima1[len(particula_prima1)-2] - particula_prima2[len(particula_prima2)-2]
+    temp = molecula[len(molecula)-2] + molecula[len(molecula)-1] - molecula_prima1[len(molecula_prima1)-2] - molecula_prima2[len(molecula_prima2)-2]
     print('temp: ', temp)
     if (temp >= 0):
         # print('temp mayor que 0: verdadero')
         k = random.uniform(0, 1)
         # energias cineticas
-        particula_prima1[len(particula_prima1)-1] = round(temp * k, 2)
-        particula_prima2[len(particula_prima2)-1] = round(temp * (1-k), 2)
+        molecula_prima1[len(molecula_prima1)-1] = round(temp * k, 2)
+        molecula_prima2[len(molecula_prima2)-1] = round(temp * (1-k), 2)
 
         poblacion.pop(w)
-        print('se añaden las partículas ala población')
-        print('particula_prima1: ', particula_prima1)
-        print('particula_prima2: ', particula_prima2 , '\n')
-        poblacion.append(particula_prima1)
-        poblacion.append(particula_prima2)
+        print('se añaden las moléculas ala población')
+        print('molécula_prima1: ', molecula_prima1)
+        print('molécula_prima2: ', molecula_prima2 , '\n')
+        poblacion.append(molecula_prima1)
+        poblacion.append(molecula_prima2)
     
     elif((temp + buffer) >= 0 ):
         # print('temp + buffer mayor igual que 0: verdadero')
@@ -151,28 +151,28 @@ def descomposicion(w, buffer):
         m3 = random.uniform(0, 1)
         m4 = random.uniform(0, 1)
         # energias cineticas
-        particula_prima1[len(particula_prima1)-1] = round((temp + buffer)*(m1)*(m2), 2)
-        particula_prima2[len(particula_prima2)-1] = round((temp + buffer - particula_prima1[len(particula_prima1)-1])*(m3)*(m4), 2)
+        molecula_prima1[len(molecula_prima1)-1] = round((temp + buffer)*(m1)*(m2), 2)
+        molecula_prima2[len(molecula_prima2)-1] = round((temp + buffer - molecula_prima1[len(molecula_prima1)-1])*(m3)*(m4), 2)
         # actualizar buffer
-        buffer = round(temp + buffer - particula_prima1[len(particula_prima1)-1] - particula_prima2[len(particula_prima2)-1], 2)
+        buffer = round(temp + buffer - molecula_prima1[len(molecula_prima1)-1] - molecula_prima2[len(molecula_prima2)-1], 2)
         print('buffer actualizdo: ', buffer)
         poblacion.pop(w)
-        print('se añaden las partículas ala población')
-        print('particula_prima1: ', particula_prima1)
-        print('particula_prima2: ', particula_prima2 , '\n')
-        poblacion.append(particula_prima1)
-        poblacion.append(particula_prima2)
+        print('se añaden las moléculas ala población')
+        print('molécula_prima1: ', molecula_prima1)
+        print('molécula_prima2: ', molecula_prima2 , '\n')
+        poblacion.append(molecula_prima1)
+        poblacion.append(molecula_prima2)
     
     else:
         print('la descomposición no se lleva a cabo\n')
 
-def descomponer_particula(particula):
-    # cruzar partes particula
+def descomponer_molecula(molecula):
+    # cruzar partes molecula
     corte = random.randint(1, len(lista_productos)-1)
     # corte = int(len(individuo1)/2)
     # print("corte", corte)
-    mochila = particula[corte:len(lista_productos)]
-    mochila.extend(particula[0:corte])
+    mochila = molecula[corte:len(lista_productos)]
+    mochila.extend(molecula[0:corte])
     puntuacion = [0] * 4
     # generar puntuacion
     for i in range(len(mochila)):
@@ -190,66 +190,66 @@ def descomponer_particula(particula):
     # añadir puntuacion
     mochila.extend(puntuacion)
 
-    mochila1 = mutar_particula(particula)
+    mochila1 = mutar_molecula(molecula)
 
     return mochila, mochila1
 
 
 def col_intermolecular_ineficaz(w, w1, buffer):
-    particula1 = poblacion[w]
-    particula2 = poblacion[w1]
-    particula_prima1 = mutar_particula(particula1.copy())
-    particula_prima2 = mutar_particula(particula2.copy())
-    print('particula1: ', particula1)
-    print('particula_prima1: ', particula_prima1)
-    print('particula2: ', particula2)
-    print('particula_prima2: ', particula_prima2)
+    molecula1 = poblacion[w]
+    molecula2 = poblacion[w1]
+    molecula_prima1 = mutar_molecula(molecula1.copy())
+    molecula_prima2 = mutar_molecula(molecula2.copy())
+    print('molécula1: ', molecula1)
+    print('molécula_prima1: ', molecula_prima1)
+    print('molécula2: ', molecula2)
+    print('molécula_prima2: ', molecula_prima2)
 
-    temp = (particula1[len(particula1)-2] + particula2[len(particula2)-2] + particula1[len(particula1)-1] + particula2[len(particula2)-1]) - (particula_prima1[len(particula_prima1)-2] + particula_prima2[len(particula_prima2)-2])
+    temp = (molecula1[len(molecula1)-2] + molecula2[len(molecula2)-2] + molecula1[len(molecula1)-1] + molecula2[len(molecula2)-1]) - (molecula_prima1[len(molecula_prima1)-2] + molecula_prima2[len(molecula_prima2)-2])
     print('temp: ', temp)
     if(temp >= 0):
         p = random.uniform(0, 1)
         # energias cineticas
-        particula_prima1[len(particula_prima1)-1] = round(temp * p, 2)
-        particula_prima2[len(particula_prima2)-1] = round(temp * (1-p), 2)
+        molecula_prima1[len(molecula_prima1)-1] = round(temp * p, 2)
+        molecula_prima2[len(molecula_prima2)-1] = round(temp * (1-p), 2)
         # actualizar particulas
-        print('se actualizan partículas en la población')
-        print(particula_prima1)
-        print(particula_prima2,'\n')
-        poblacion[w] = particula_prima1
-        poblacion[w1] = particula_prima2
+        print('se actualizan las moléculas en la población')
+        print(molecula_prima1)
+        print(molecula_prima2,'\n')
+        poblacion[w] = molecula_prima1
+        poblacion[w1] = molecula_prima2
     else:
-        print('no hay cambios en la estructura interna de las partículas\n')
+        print('no hay cambios en la estructura interna de las moléculas\n')
 
 
 def col_sintesis(w, w1, buffer):
-    particula1 = poblacion[w]
-    particula2 = poblacion[w1]
-    particula_prima = fusionar_particulas(particula1.copy(), particula2.copy())
-    print('particula1: ', particula1)
-    print('particula2: ', particula2)
-    print('particula_prima: ', particula_prima)
+    molecula1 = poblacion[w]
+    molecula2 = poblacion[w1]
+    molecula_prima = fusionar_moleculas(molecula1.copy(), molecula2.copy())
+    print('molécula1: ', molecula1)
+    print('molécula2: ', molecula2)
+    print('molécula_prima: ', molecula_prima)
 
-    if((particula1[len(particula1)-2] + particula2[len(particula2)-2] + particula1[len(particula1)-1] + particula2[len(particula2)-1]) >= (particula_prima[len(particula_prima)-2])):
+    if((molecula1[len(molecula1)-2] + molecula2[len(molecula2)-2] + molecula1[len(molecula1)-1] + molecula2[len(molecula2)-1]) >= (molecula_prima[len(molecula_prima)-2])):
         # energia cinetica
-        particula_prima[len(particula_prima)-1] = round((particula1[len(particula1)-2] + particula2[len(particula2)-2] + particula1[len(particula1)-1] + particula2[len(particula2)-1] - particula_prima[len(particula_prima)-2]), 2)
-        print('se fusionan las partículas y se crea una nueva')
-        print(particula_prima , '\n')
+        molecula_prima[len(molecula_prima)-1] = round((molecula1[len(molecula1)-2] + molecula2[len(molecula2)-2] + molecula1[len(molecula1)-1] + molecula2[len(molecula2)-1] - molecula_prima[len(molecula_prima)-2]), 2)
+        print('se fusionan las moléculas y se crea una nueva')
+        print(molecula_prima , '\n')
         poblacion.pop(w)
         if(w1 == 0):
             poblacion.pop(w1)
         else:
             poblacion.pop(w1-1)
-        poblacion.append(particula_prima)
+        poblacion.append(molecula_prima)
 
     else:
         print('la síntesis no se lleva a cabo\n')
 
-def fusionar_particulas(particula1, particula2):
+def fusionar_moleculas(molecula1, molecula2):
     # cruzar particulas
     corte = random.randint(1, len(lista_productos)-1)
-    mochila = particula1[0:corte]
-    mochila.extend(particula2[corte:len(lista_productos)])
+    mochila = molecula1[0:corte]
+    mochila.extend(molecula2[corte:len(lista_productos)])
 
     puntuacion = [0] * 4
     # generar puntuacion
@@ -273,10 +273,10 @@ def fusionar_particulas(particula1, particula2):
 
 def main():
     # estado inicial del sistema
-    crear_poblacion_inicial(numero_particulas)
+    crear_poblacion_inicial(numero_moleculas)
     buffer = energia_potencial_total(poblacion)
     print(f"buffer: {buffer} \n")
-    mostrar_mejor_particula()
+    mostrar_mejor_molecula()
 
     colisiones = 0
     while (colisiones < max_colisiones):
@@ -302,7 +302,7 @@ def main():
             print(f'colisión síntesis\n')
             col_sintesis(w, w1, buffer)
         colisiones += 1
-    mostrar_mejor_particula()
+    mostrar_mejor_molecula()
 
 
 if __name__ == '__main__':
