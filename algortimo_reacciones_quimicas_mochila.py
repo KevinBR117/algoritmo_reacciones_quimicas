@@ -9,13 +9,13 @@ for linea in archivo:
 print(f'lista de productos: {lista_productos} \n')
 
 poblacion = []
-nueva_poblacion = []
-numero_moleculas = 10
+# nueva_poblacion = []
+numero_moleculas = 1000
 mejor_molecula = []
 buffer = 0
 ratio_perdidaKE = 0.4
 # mutacion = 0.5
-max_colisiones = 100
+max_colisiones = 1000
 calorias_min = 800
 peso_max = 1.5
 
@@ -71,6 +71,7 @@ def col_ineficaz_contra_pared(w, buffer):
     molecula_prima = mutar_molecula(molecula.copy())
     print('molécula_original: ', molecula)
     print('molécula_prima: ', molecula_prima)
+
     if((molecula[len(molecula)-2] + molecula[len(molecula)-1]) >= molecula_prima[len(molecula_prima)-2]):
         q = random.uniform(ratio_perdidaKE, 1)
         # energia cinetica
