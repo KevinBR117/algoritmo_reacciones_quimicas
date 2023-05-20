@@ -9,12 +9,10 @@ for linea in archivo:
 print(f'lista de productos: {lista_productos} \n')
 
 poblacion = []
-# nueva_poblacion = []
 numero_moleculas = 1000
 mejor_molecula = []
 buffer = 0
 ratio_perdidaKE = 0.4
-# mutacion = 0.5
 max_colisiones = 1000
 calorias_min = 800
 peso_max = 1.5
